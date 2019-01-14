@@ -16,9 +16,7 @@ help {hi:strgroup}
 
 {title:Description}
 
-{p 4 4 2}{cmd:strgroup} matches similar strings together. This can be useful when merging data that contain typos. For example, 
-"widgets" will not merge with "widgetts" because the strings are not identical. 
-{cmd:strgroup} provides a way to match strings in an objective and automated manner. It employs the following algorithm:
+{p 4 4 2}{cmd:strgroup} performs a fuzzy string match using the following algorithm:
 
 {p 8 14 2}1. Calculate the Levenshtein edit distance between all pairwise combinations of strings in {it:varname}.
 
@@ -34,8 +32,6 @@ user-specified threshold.
 
 {p 4 4 2}For example, the Levenshtein edit distance between "widgets" and "widgetts" is 1. 
 The lengths of these two strings are 7 and 8, respectively. Assuming {cmd:normalize(shorter)}, they are matched by {cmd:strgroup} if 1/7 <= threshold.
-
-{p 4 4 2}{cmd:strgroup} is case sensitive.
 
 {p 4 4 2}See {help levenshtein:levenshtein} for an explanation of the Levenshtein edit distance.
 
@@ -72,7 +68,7 @@ memory problems if your dataset is too large.
 {title:Notes}
 
 {p 4 4 2}
-{cmd:strgroup} does not match missing strings.
+{cmd:strgroup} does not match missing strings. {cmd:strgroup} is case sensitive.
 
 {p 4 4 2}
 As explained above, {cmd:strgroup} calculates the Levenshtein edit distance between all pairwise combinations of strings in {it:varname}. 
@@ -83,8 +79,8 @@ The {cmd:first} option automates this by subsetting strings according to their f
 Alternatively, the user can run {cmd:strgroup} on subsets of the data by using the {cmd:if}, {cmd:in} and/or {cmd:by} options.
 
 {p 4 4 2}
-{cmd:strgroup} is implemented as a {help plugin:plugin} in order to minimize memory requirements and to maximize speed. 
-Unfortunately, plugins are specific to the hardware architecture and software framework of your computer, i.e., plugins are not cross-platform.
+{cmd:strgroup} is implemented as a C {help plugin:plugin} in order to minimize memory requirements and to maximize speed. 
+Plugins are specific to the hardware architecture and software framework of your computer, i.e., they are not cross-platform.
 Define a platform by two characteristics: machine type and operating system. 
 Stata stores these characteristics in {cmd:c(machine_type)} and {cmd:c(os)}, respectively. {cmd:strgroup} supports the following platforms at this time:
 
