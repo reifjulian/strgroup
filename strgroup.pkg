@@ -6,8 +6,8 @@ f /src/strgroup.ado
 f /src/strgroup.hlp
 f /src/levenshtein.ado
 f /src/levenshtein.hlp
-g MACINTEL64 strgroup.Macintosh.MacOSX.plugin strgroup.plugin
-g LINUX64 strgroup.PC(64-bit_x86-64).Unix.plugin strgroup.plugin
-g WIN64A strgroup.PC(64-bit_x86-64).Windows.plugin strgroup.plugin
-g WIN strgroup.PC.Windows.plugin strgroup.plugin
+g MACINTEL64 /src/strgroup.Macintosh.MacOSX.plugin strgroup.plugin
+g LINUX64 /src/strgroup.PC(64-bit_x86-64).Unix.plugin strgroup.plugin
+g WIN64A /src/strgroup.PC(64-bit_x86-64).Windows.plugin strgroup.plugin
+g WIN /src/strgroup.PC.Windows.plugin strgroup.plugin
 
