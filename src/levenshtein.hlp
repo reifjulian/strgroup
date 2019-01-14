@@ -50,8 +50,8 @@ change one into the other, and it is impossible to do it with fewer than three e
 {title:Notes}
 
 {p 4 4 2}
-{cmd:levenshtein} is implemented as a {help plugin:plugin} in order to minimize memory requirements and to maximize speed. 
-Unfortunately, plugins are specific to the hardware architecture and software framework of your computer, i.e., plugins are not cross-platform.
+{cmd:levenshtein} is implemented as a C {help plugin:plugin} in order to minimize memory requirements and to maximize speed. 
+Plugins are specific to the hardware architecture and software framework of your computer, i.e., they are not cross-platform.
 Define a platform by two characteristics: machine type and operating system. 
 Stata stores these characteristics in {cmd:c(machine_type)} and {cmd:c(os)}, respectively. {cmd:levenshtein} supports the following platforms at this time:
 
