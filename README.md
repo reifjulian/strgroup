@@ -25,7 +25,7 @@ ssc install strgroup, replace
 
 These two versions are typically synced, but occasionally the SSC version may be slightly out of date.
 
-strgroup is implemented as a [C plugin](https://www.stata.com/plugins/) in order to minimize memory requirements and to maximize speed.  Plugins are specific to the hardware architecture and software framework of your computer. Define a platform by two characteristics: machine type and operating system.  Stata stores these characteristics in c(machine_type) and c(os), respectively. `strgroup` supports the following platforms at this time:
+`strgroup` is implemented as a [C plugin](https://www.stata.com/plugins/) in order to minimize memory requirements and to maximize speed.  Plugins are specific to the hardware architecture and software framework of your computer. Define a platform by two characteristics: machine type and operating system.  Stata stores these characteristics in `c(machine_type)` and `c(os)`, respectively. `strgroup` supports the following platforms at this time:
 
 >Machine type                   | Operating system
 
