@@ -1,0 +1,13 @@
+v 3
+d strgroup. Match strings based on their Levenshtein edit distance.
+d Julian Reif, University of Illinois (jreif@illinois.edu)
+
+f /src/strgroup.ado
+f /src/strgroup.hlp
+f /src/levenshtein.ado
+f /src/levenshtein.hlp
+g MACINTEL64 strgroup.Macintosh.MacOSX.plugin strgroup.plugin
+g LINUX64 strgroup.PC(64-bit_x86-64).Unix.plugin strgroup.plugin
+g WIN64A strgroup.PC(64-bit_x86-64).Windows.plugin strgroup.plugin
+g WIN strgroup.PC.Windows.plugin strgroup.plugin
+
