@@ -25,6 +25,16 @@ ssc install strgroup, replace
 
 These two versions are typically synced, but occasionally the SSC version may be slightly out of date.
 
+`strgroup` is implemented as a [C plugin](https://www.stata.com/plugins/) in order to minimize memory requirements and to maximize speed.  Plugins are specific to the hardware architecture and software framework of your computer. Define a platform by two characteristics: machine type and operating system.  Stata stores these characteristics in `c(machine_type)` and `c(os)`, respectively. `strgroup` supports the following platforms at this time:
+
+| Machine type    | Operating system           |
+| ------------- |:-------------:| 
+| PC      | Windows |
+| PC (64-bit x86-64)      | Windows      | 
+| PC (64-bit x86-64)      | Unix      | 
+| Macintosh      | MacOSX      | 
+| Macintosh (Intel 64-bit)       | MacOSX      | 
+
 ## Description: 
 
 `strgroup` is a [Stata](http://www.stata.com) command that performs a fuzzy string match using the following algorithm:
@@ -39,27 +49,13 @@ These two versions are typically synced, but occasionally the SSC version may be
 
 5. Assign each group of matches a unique number.
 
-`strgroup` is implemented as a [C plugin](https://www.stata.com/plugins/) in order to minimize memory requirements and to maximize speed.  Plugins are specific to the hardware architecture and software framework of your computer. Define a platform by two characteristics: machine type and operating system.  Stata stores these characteristics in `c(machine_type)` and `c(os)`, respectively. `strgroup` supports the following platforms at this time:
+The Levenshtein edit distance is defined as the minimum number of insertions, deletions, or substitutions necessary to change one string into the other. For example, the Levenshtein edit distance between "mitten" and "fitting" is 3, since the following three edits change one into the other, and it is impossible to do it with fewer than three edits:
 
-|Machine type                   | Operating system
+1. mitten -> fitten (substitution of 'f' for 'm')
 
-|PC                             | Windows
+2. fitten -> fittin (substitution of 'i' for 'e')
 
-|PC (64-bit x86-64)             | Windows
-
-|PC (64-bit x86-64)             | Unix
-
-|Macintosh                      | MacOSX
-
-|Macintosh (Intel 64-bit)       | MacOSX
-
-| Machine type    | Operating system           |
-| ------------- |:-------------:| 
-| PC      | Windows |
-| PC (64-bit x86-64)      | Windows      | 
-| PC (64-bit x86-64)      | Unix      | 
-| Macintosh      | MacOSX      | 
-| Macintosh (Intel 64-bit)       | MacOSX      | 
+3. fittin -> fitting (insert 'g' at the end)
 
 For more details, see the Stata help file included in this package.
 
