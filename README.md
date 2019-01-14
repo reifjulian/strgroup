@@ -1,4 +1,4 @@
-# STRGROUP: match strings based on their Levenshtein edit distance.
+# STRGROUP: match strings based on their Levenshtein edit distance
 
 - Current version: `1.0.2 07aug2010`
 - Jump to: [`updates`](#recent-updates) [`install`](#install) [`description`](#description) [`author`](#author)
@@ -8,7 +8,7 @@
 ## Updates:
 
 * **January 14, 2019**
-  - Updated help files
+  - Updated Stata help files
 
 ## Install:
 
