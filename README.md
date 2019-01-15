@@ -9,6 +9,7 @@
 
 * **January 14, 2019**
   - Updated Stata help files
+  - Recompiled OS X plugin (old version on SSC had an out-of-date output display interface)
 
 ## Install:
 
