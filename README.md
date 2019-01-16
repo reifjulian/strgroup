@@ -9,7 +9,6 @@
 
 * **January 14, 2019**
   - Updated Stata help files
-  - Recompiled OS X plugin (SSC version had mistakenly included an older version of the plugin that outputted debugging information)
 
 ## Install:
 
