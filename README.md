@@ -63,22 +63,22 @@ For more details, see the Stata help file included in this package.
 
 The C source code for `strgroup` is available in `/src/c`. It must be compiled separately for different machine types.
 
-PC Windows (Cygwin)
+PC Windows (Cygwin):
 ```
-gcc -shared -mno-cygwin stplugin.c strgroup.c -O3 -funroll-loops -o strgroup.PC.Windows.plugin`
+gcc -shared -mno-cygwin stplugin.c strgroup.c -O3 -funroll-loops -o strgroup.PC.Windows.plugin
 ```
 
-PC Windows (Cygwin 64)
+PC Windows (Cygwin 64):
 ```
 gcc -shared  stplugin.c strgroup.c -O3 -funroll-loops -o strgroup.PC.Windows.plugin
 ```
 
-64-bit Windows (needs Cygwin and mingw compiler)
+64-bit Windows (needs Cygwin and mingw compiler):
 ```
 x86_64-w64-mingw32-gcc -shared stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.PC (64-bit x86-64).Windows.plugin"
 ```
 
-64-bit Unix
+64-bit Unix:
 ```
 gcc -shared -fPIC -DSYSTEM=OPUNIX stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.PC (64-bit x86-64).Unix.plugin"
 ```
@@ -90,19 +90,22 @@ gcc -bundle -arch i386 -arch x86_64 -arch ppc -DSYSTEM=APPLEMAC stplugin.c strgr
 ```
 
 
-Mac OS (option 2)
+Mac OS (option 2):
 ```
 xcode-select --install
 gcc -bundle -arch i386 -arch x86_64 -DSYSTEM=APPLEMAC stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.Macintosh.MacOSX.plugin"
 ```
 
 Additional information:
+
 http://stackoverflow.com/questions/873812/how-to-compile-existing-posix-code-for-64-bit-windows
 
 InspectExe allows you to to figure out if a compiled file is a 32-bit or 64-bit DLL: install InspectExe, right-click, properties->InspectExe
+
 http://www.silurian.com/win32/inspect.htm
 
 64-bit Cygwin should be able to compile to either 32-bit or 64-bit Windows. There are issues with longs, but `strgroup` doesn't use them
+
 http://cygwin.com/cygwin-ug-net/programming.html
 
 
