@@ -84,7 +84,7 @@ gcc -shared -fPIC -DSYSTEM=OPUNIX stplugin.c strgroup.c -O3 -funroll-loops -o "s
 ```
 
 
-Mac OS X arch ppc (option 1). Note: `=arch ppc` may no longer be available, in which case use option 2.
+Mac OS X arch ppc (option 1). Note: `=arch ppc` may no longer be available, in which case use option 2 below.
 ```
 gcc -bundle -arch i386 -arch x86_64 -arch ppc -DSYSTEM=APPLEMAC stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.Macintosh.MacOSX.plugin"
 ```
