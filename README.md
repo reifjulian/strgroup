@@ -1,7 +1,7 @@
 # STRGROUP: match strings based on their Levenshtein edit distance
 
 - Current version: `1.0.2 07aug2010`
-- Jump to: [`updates`](#recent-updates) [`install`](#install) [`description`](#description) [`author`](#author)
+- Jump to: [`updates`](#recent-updates) [`install`](#install) [`description`](#description) [`compiling`](#compiling) [`author`](#author)
 
 -----------
 
@@ -58,6 +58,40 @@ The Levenshtein edit distance is defined as the minimum number of insertions, de
 3. fittin -> fitting (insert 'g' at the end)
 
 For more details, see the Stata help file included in this package.
+
+## Compiling:
+
+The C source code for `strgroup` is available in `/src/c`. It must be compiled separately for different machine types.
+
+PC Windows (Cygwin)
+`gcc -shared -mno-cygwin stplugin.c strgroup.c -O3 -funroll-loops -o strgroup.PC.Windows.plugin`
+
+PC Windows (Cygwin 64)
+`gcc -shared  stplugin.c strgroup.c -O3 -funroll-loops -o strgroup.PC.Windows.plugin`
+
+64-bit Windows (needs Cygwin and mingw compiler)
+x86_64-w64-mingw32-gcc -shared stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.PC (64-bit x86-64).Windows.plugin"
+
+64-bit Unix
+`gcc -shared -fPIC -DSYSTEM=OPUNIX stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.PC (64-bit x86-64).Unix.plugin"`
+
+Mac OS X arch ppc (option 1). Note: `=arch ppc` may no longer be available, in which case use option 2.
+`gcc -bundle -arch i386 -arch x86_64 -arch ppc -DSYSTEM=APPLEMAC stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.Macintosh.MacOSX.plugin"`
+
+Mac OS (option 2)
+`xcode-select --install`
+`gcc -bundle -arch i386 -arch x86_64 -DSYSTEM=APPLEMAC stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.Macintosh.MacOSX.plugin"`
+
+Additional information:
+http://stackoverflow.com/questions/873812/how-to-compile-existing-posix-code-for-64-bit-windows
+
+InspectExe allows you to to figure out if a compiled file is a 32-bit or 64-bit DLL: install InspectExe, right-click, properties->InspectExe
+http://www.silurian.com/win32/inspect.htm
+
+64-bit Cygwin should be able to compile to either 32-bit or 64-bit Windows. There are issues with longs, but `strgroup` doesn't use them
+http://cygwin.com/cygwin-ug-net/programming.html
+
+
 
 ## Author:
 
