@@ -14,12 +14,12 @@
 
 Type `which strgroup` at the Stata prompt to determine which version you have installed. To install the most recent version of `strgroup`, copy/paste the following line of code:
 
-```
+```stata
 net install strgroup, from("https://raw.githubusercontent.com/reifjulian/strgroup/master") replace
 ```
 
 To install the version that was uploaded to SSC, copy/paste the following line of code:
-```
+```stata
 ssc install strgroup, replace
 ```
 
