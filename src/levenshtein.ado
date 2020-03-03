@@ -1,12 +1,13 @@
-*! levenshtein 1.0.1 05aug2010 by Julian Reif
+*! levenshtein 1.0.2 28feb2020 by Julian Reif
+* 1.0.2: Plugin platform type now determined in the code
 * 1.0.1: Added ability to retrieve edit distances for two string vectors
 
 program define levenshtein, rclass 
 
-	* We are using version 2.0 of Stata's plugin interface, which requires Stata 9
+	* Using version 2.0 of Stata's plugin interface, which requires Stata 9
 	version 9.2
 	return clear
-		
+	
 	*************
 	* Usage one *
 	*************
@@ -61,6 +62,19 @@ program define levenshtein, rclass
 	
 end
 
-program strgroup_plugin, plugin using( "strgroup.plugin" )
+
+***
+* Load the plugin (depends on user's platform)
+***
+local os = lower("`c(os)'")
+local strgroup_plugin "strgroup.`os'"
+	
+if "`os'"=="windows" {
+	if strpos("`c(machine_type)'","64-bit") local strgroup_plugin "`strgroup_plugin'64"
+	else local strgroup_plugin "`strgroup_plugin'32"
+}
+local strgroup_plugin "`strgroup_plugin'.plugin"
+
+program strgroup_plugin, plugin using("`strgroup_plugin'")
 
 **EOF

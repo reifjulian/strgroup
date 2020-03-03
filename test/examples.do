@@ -1,5 +1,5 @@
-* This script runs a series of tests on the -strgroup- package
-* Author: Julian Reif
+cscript strgroup adofile strgroup
+
 adopath ++ "../src"
 set more off
 
