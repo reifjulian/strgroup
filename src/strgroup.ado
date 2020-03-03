@@ -1,10 +1,11 @@
-*! strgroup 1.0.2 07aug2010 by Julian Reif
+*! strgroup 1.0.3 28feb2020 by Julian Reif
+* 1.0.3: Plugin platform type now determined in the code
 * 1.0.2: Added byable option
 * 1.0.1: Improved plugin memory management. Recompiled plugin using optimization flags.
 
 program strgroup, byable(recall, noheader)
 
-	* We are using version 2.0 of Stata's plugin interface, which requires Stata 9
+	* Using version 2.0 of Stata's plugin interface, which requires Stata 9
 	version 9.2
 	
 	syntax varname [if] [in], GENerate(name) THRESHold(real) [first NORMalize(string) noCLEAN force]
@@ -88,7 +89,7 @@ program strgroup, byable(recall, noheader)
 	*********************************************
 	**      Run the strgroup plugin			   **
 	*********************************************
-
+	
 	* Case 1: first is not specified. Use the original touse variable
 	if "`first'" == "" {
 		qui count if `touse'
@@ -132,6 +133,19 @@ program strgroup, byable(recall, noheader)
 
 end
 
-program strgroup_plugin, plugin using( "strgroup.plugin" )
+
+***
+* Load the plugin (depends on user's platform)
+***
+local os = lower("`c(os)'")
+local strgroup_plugin "strgroup.`os'"
+	
+if "`os'"=="windows" {
+	if strpos("`c(machine_type)'","64-bit") local strgroup_plugin "`strgroup_plugin'64"
+	else local strgroup_plugin "`strgroup_plugin'32"
+}
+local strgroup_plugin "`strgroup_plugin'.plugin"
+
+program strgroup_plugin, plugin using("`strgroup_plugin'")
 
 *** END **

@@ -1,14 +1,16 @@
 # STRGROUP: match strings based on their Levenshtein edit distance
 
-- Current version: `1.0.2 07aug2010`
+- Current version: `1.0.3 28feb2020`
 - Jump to: [`updates`](#recent-updates) [`install`](#install) [`description`](#description) [`compiling`](#compiling) [`author`](#author)
 
 -----------
 
 ## Updates:
 
-* **January 14, 2019**
-  - Updated Stata help files
+* **February 28, 2020**
+  - Package installation now downloads plugins for all platforms
+  - **strgroup.ado** then autodetects which plugin to use based on user's platform
+  - Thus, user is no longer required to do multiple installs when using a shared library with multiple platforms
 
 ## Install:
 
@@ -34,6 +36,8 @@ These two versions are typically synced, but occasionally the SSC version may be
 | PC (64-bit x86-64)      | Unix      | 
 | Macintosh      | MacOSX      | 
 | Macintosh (Intel 64-bit)       | MacOSX      | 
+
+`strgroup` might work with some other platforms (e.g., 32-bit unix), but this has not been tested.
 
 ## Description: 
 
@@ -96,7 +100,7 @@ xcode-select --install
 gcc -bundle -arch i386 -arch x86_64 -DSYSTEM=APPLEMAC stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.Macintosh.MacOSX.plugin"
 ```
 
-Additional information:
+Additional information that may be helpful:
 
 http://stackoverflow.com/questions/873812/how-to-compile-existing-posix-code-for-64-bit-windows
 
