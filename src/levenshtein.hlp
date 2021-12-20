@@ -47,6 +47,20 @@ change one into the other, and it is impossible to do it with fewer than three e
 {col 8}{cmd:. {stata levenshtein make foreign_string, gen(edit_dist)}}
 
 
+{title:Remarks}
+
+{p 4 4 2}
+The Levenshtein edit distance is calculated using byte-based comparisons, and some non-ASCII characters are larger than one byte in Unicode.
+For example, the edit distance between the Unicode characters '$' and '£' is 2, not 1:
+
+{col 8}{cmd:. {stata levenshtein "$" "£"}}
+
+{p 4 4 2}
+To avoid this issue, use Stata's string functions to convert multi-byte characters to single-byte characters:
+
+{col 8}{cmd:. {stata levenshtein "$" "`=ustrto("£","latin1",1)'"}
+
+
 {title:Notes}
 
 {p 4 4 2}
@@ -57,6 +71,7 @@ Stata stores these characteristics in {cmd:c(machine_type)} and {cmd:c(os)}, res
 
 {col 10}{hi:Machine type}{col 40} {hi:Operating system}
 {col 10}PC{col 40} Windows
+{col 10}PC (64-bit x86-64){col 40} Windows
 {col 10}PC (64-bit x86-64){col 40} Unix
 {col 10}Macintosh{col 40} MacOSX
 {col 10}Macintosh (Intel 64-bit){col 40} MacOSX

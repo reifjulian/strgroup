@@ -65,10 +65,24 @@ run time.
 memory problems if your dataset is too large.
 
 
-{title:Notes}
+{title:Remarks}
 
 {p 4 4 2}
 {cmd:strgroup} does not match missing strings. {cmd:strgroup} is case sensitive.
+
+{p 4 4 2}
+The Levenshtein edit distance is calculated using byte-based comparisons, and some non-ASCII characters are larger than one byte in Unicode.
+For example, the edit distance between the Unicode characters '$' and '£' is 2, not 1:
+
+{col 8}{cmd:. {stata levenshtein "$" "£"}}
+
+{p 4 4 2}
+To avoid this issue, use Stata's string functions to convert multi-byte characters to single-byte characters:
+
+{col 8}{cmd:. {stata levenshtein "$" "`=ustrto("£","latin1",1)'"}
+
+
+{title:Notes}
 
 {p 4 4 2}
 As explained above, {cmd:strgroup} calculates the Levenshtein edit distance between all pairwise combinations of strings in {it:varname}. 
