@@ -1,45 +1,11 @@
 # STRGROUP: match strings based on their Levenshtein edit distance
 
-- Current version: `1.0.3 28feb2020`
-- Jump to: [`updates`](#recent-updates) [`install`](#install) [`description`](#description) [`compiling`](#compiling) [`author`](#author)
+- Current version: `1.0.4 17dec2021`
+- Jump to: [`overview`](#overview) [`installation`](#Installation) [`compiling`](#compiling) [`update history`](#update-history) [`author`](#author)
 
 -----------
 
-## Updates:
-
-* **February 28, 2020**
-  - Package installation now downloads plugins for all platforms
-  - **strgroup.ado** then autodetects which plugin to use based on user's platform
-  - Thus, user is no longer required to do multiple installs when using a shared library with multiple platforms
-
-## Install:
-
-Type `which strgroup` at the Stata prompt to determine which version you have installed. To install the most recent version of `strgroup`, copy/paste the following line of code:
-
-```stata
-net install strgroup, from("https://raw.githubusercontent.com/reifjulian/strgroup/master") replace
-```
-
-To install the version that was uploaded to SSC, copy/paste the following line of code:
-```stata
-ssc install strgroup, replace
-```
-
-These two versions are typically synced, but occasionally the SSC version may be slightly out of date.
-
-`strgroup` is implemented as a [C plugin](https://www.stata.com/plugins/) in order to minimize memory requirements and to maximize speed.  Plugins are specific to the hardware architecture and software framework of your computer. Define a platform by two characteristics: machine type and operating system.  Stata stores these characteristics in `c(machine_type)` and `c(os)`, respectively. `strgroup` supports the following platforms at this time:
-
-| Machine type    | Operating system           |
-| :------------- |:-------------| 
-| PC      | Windows |
-| PC (64-bit x86-64)      | Windows      | 
-| PC (64-bit x86-64)      | Unix      | 
-| Macintosh      | MacOSX      | 
-| Macintosh (Intel 64-bit)       | MacOSX      | 
-
-`strgroup` might work with some other platforms (e.g., 32-bit unix), but this has not been tested.
-
-## Description: 
+## Overview: 
 
 `strgroup` is a [Stata](http://www.stata.com) command that performs a fuzzy string match using the following algorithm:
 
@@ -62,6 +28,33 @@ The Levenshtein edit distance is defined as the minimum number of insertions, de
 3. fittin -> fitting (insert 'g' at the end)
 
 For more details, see the Stata help file included in this package.
+
+## Installation:
+
+Type `which strgroup` at the Stata prompt to determine which version you have installed. To install the most recent version, copy and paste the following line of code:
+
+```stata
+net install strgroup, from("https://raw.githubusercontent.com/reifjulian/strgroup/master") replace
+```
+
+To install the version that was uploaded to SSC, copy and paste the following line of code:
+```stata
+ssc install strgroup, replace
+```
+
+After installing, type `help strgroup` to learn the syntax.
+
+`strgroup` is implemented as a [C plugin](https://www.stata.com/plugins/) in order to minimize memory requirements and to maximize speed.  Plugins are specific to the hardware architecture and software framework of your computer. Define a platform by two characteristics: machine type and operating system.  Stata stores these characteristics in `c(machine_type)` and `c(os)`, respectively. `strgroup` supports the following platforms at this time:
+
+| Machine type    | Operating system           |
+| :------------- |:-------------| 
+| PC      | Windows |
+| PC (64-bit x86-64)      | Windows      | 
+| PC (64-bit x86-64)      | Unix      | 
+| Macintosh      | MacOSX      | 
+| Macintosh (Intel 64-bit)       | MacOSX      | 
+
+`strgroup` might work with some other platforms (e.g., 32-bit unix), but this has not been tested.
 
 ## Compiling:
 
@@ -112,7 +105,14 @@ http://www.silurian.com/win32/inspect.htm
 
 http://cygwin.com/cygwin-ug-net/programming.html
 
+## Update History:
+* **December 17, 2021**
+  - Edited text of warning message in case of duplicate observations
 
+* **February 28, 2020**
+  - Package installation now downloads plugins for all platforms
+  - **strgroup.ado** then autodetects which plugin to use based on user's platform
+  - Thus, user is no longer required to do multiple installs when using a shared library with multiple platforms
 
 ## Author:
 

@@ -1,4 +1,5 @@
-*! strgroup 1.0.3 28feb2020 by Julian Reif
+*! strgroup 1.0.4 17dec2021 by Julian Reif
+* 1.0.4: Edited warning message in case of duplicates
 * 1.0.3: Plugin platform type now determined in the code
 * 1.0.2: Added byable option
 * 1.0.1: Improved plugin memory management. Recompiled plugin using optimization flags.
@@ -47,8 +48,10 @@ program strgroup, byable(recall, noheader)
 	}
 
 	* Display a warning if string values are not unique
-	cap isid `varlist'
-	if _rc di in yellow "{it:`varlist'} contains duplicate values. Remove them to speed up calculations."
+	if _byindex()==1 {
+		capture duplicates report `_byvars' `varlist' `if' `in'
+		if `r(unique_value)'<`r(N)' di in yellow "{it:`varlist'} contains duplicate values. Remove them to speed up calculations."
+	}
 
 	if _byindex()==1 qui gen long `generate' = .
 	
@@ -72,14 +75,14 @@ program strgroup, byable(recall, noheader)
 		local char_num = 1
 		foreach char in other a b c d e f g h i j k l m n o p q r s t u v w x y z {
 
-			*Create new touse variable and set it equal to the original
+			* Create new touse variable and set it equal to the original
 			tempvar touse_`char_num'
 			qui gen byte `touse_`char_num'' = `touse'
 
-			*Subset down to strings not starting with an alphabetic letter
+			* Subset down to strings not starting with an alphabetic letter
 			if "`char'" == "other" qui replace `touse_1' = 0 if (substr(`varlist',1,1) >= "A" & substr(`varlist',1,1) <= "Z") | (substr(`varlist',1,1) >= "a" & substr(`varlist',1,1) <= "z")
 
-			*Else subset down to one of the alphabetic letters
+			* Else subset down to one of the alphabetic letters
 			else qui replace `touse_`char_num'' = 0 if substr(`varlist',1,1) != "`char'" & substr(`varlist',1,1) != "`=upper("`char'")'"
 
 			local char_num = `char_num'+1
