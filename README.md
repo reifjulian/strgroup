@@ -60,37 +60,26 @@ After installing, type `help strgroup` to learn the syntax.
 
 The C source code for `strgroup` is available in `/src/c`. It must be compiled separately for different machine types.
 
-PC Windows (Cygwin):
+PC Windows 32-bit (Cygwin):
 ```
-gcc -shared -mno-cygwin stplugin.c strgroup.c -O3 -funroll-loops -o strgroup.PC.Windows.plugin
-```
-
-PC Windows (Cygwin 64):
-```
-gcc -shared  stplugin.c strgroup.c -O3 -funroll-loops -o strgroup.PC.Windows.plugin
+gcc -shared -mno-cygwin stplugin.c strgroup.c -O3 -funroll-loops -o strgroup.windows32.plugin
 ```
 
-64-bit Windows (needs Cygwin and mingw compiler):
+PC Windows 64-bit (needs Cygwin and mingw compiler):
 ```
-x86_64-w64-mingw32-gcc -shared stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.PC (64-bit x86-64).Windows.plugin"
-```
-
-64-bit Unix:
-```
-gcc -shared -fPIC -DSYSTEM=OPUNIX stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.PC (64-bit x86-64).Unix.plugin"
+x86_64-w64-mingw32-gcc -shared stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.windows64.plugin"
 ```
 
-
-Mac OS X arch ppc (option 1). Note: `=arch ppc` may no longer be available, in which case use option 2 below.
+Unix 64-bit:
 ```
-gcc -bundle -arch i386 -arch x86_64 -arch ppc -DSYSTEM=APPLEMAC stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.Macintosh.MacOSX.plugin"
+gcc -shared -fPIC -DSYSTEM=OPUNIX stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.unix.plugin"
 ```
 
-
-Mac OS (option 2):
+Mac OS X (Intel and ARM):
 ```
-xcode-select --install
-gcc -bundle -arch i386 -arch x86_64 -DSYSTEM=APPLEMAC stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.Macintosh.MacOSX.plugin"
+clang -bundle -o strgroup.macosx.x86_64 stplugin.c strgroup.c -DSYSTEM=APPLEMAC -target x86_64-apple-macos10.11
+clang -bundle -o strgroup.macosx.arm64 stplugin.c strgroup.c -DSYSTEM=APPLEMAC -target arm64-apple-macos11
+lipo -create -output strgroup.macosx.plugin strgroup.macosx.x86_64 strgroup.macosx.arm64
 ```
 
 Additional information that may be helpful:
