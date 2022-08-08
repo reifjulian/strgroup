@@ -1,6 +1,5 @@
-cscript strgroup adofile strgroup
-
 adopath ++ "../src"
+cscript strgroup adofile strgroup
 set more off
 
 version 17
