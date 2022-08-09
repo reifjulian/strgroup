@@ -95,6 +95,9 @@ http://www.silurian.com/win32/inspect.htm
 http://cygwin.com/cygwin-ug-net/programming.html
 
 ## Update History:
+* **August 9, 2022**
+  - Added support for ARM-based macs
+  
 * **December 17, 2021**
   - Edited text of warning message in case of duplicate observations
 
