@@ -1,7 +1,7 @@
 # STRGROUP: match strings based on their Levenshtein edit distance
 
 - Current version: `1.0.4 17dec2021`
-- Jump to: [`overview`](#overview) [`installation`](#Installation) [`compiling`](#compiling) [`update history`](#update-history) [`author`](#author)
+- Jump to: [`overview`](#overview) [`installation`](#installation) [`compiling`](#compiling) [`update history`](#update-history) [`author`](#author)
 
 -----------
 
