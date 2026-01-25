@@ -115,20 +115,20 @@ Number of observations (_N) was 0, now 10,000.
 (10,000 missing values generated)
 
 ===== N = 10000 =====
-  threshold=0.3, first=no:   4.077s avg (9994 groups)
-  threshold=0.3, first=yes:  0.548s avg (9995 groups)
+  threshold=0.3, first=no:   2.014s avg (9994 groups)
+  threshold=0.3, first=yes:  0.092s avg (9995 groups)
 Number of observations (_N) was 0, now 15,000.
 (15,000 missing values generated)
 
 ===== N = 15000 =====
-  threshold=0.3, first=no:   9.281s avg (14993 groups)
-  threshold=0.3, first=yes:  1.184s avg (14994 groups)
+  threshold=0.3, first=no:   4.664s avg (14993 groups)
+  threshold=0.3, first=yes:  0.176s avg (14994 groups)
 Number of observations (_N) was 0, now 20,000.
 (20,000 missing values generated)
 
 ===== N = 20000 =====
-  threshold=0.3, first=no:  16.768s avg (19981 groups)
-  threshold=0.3, first=yes:  2.074s avg (19983 groups)
+  threshold=0.3, first=no:   8.332s avg (19981 groups)
+  threshold=0.3, first=yes:  0.287s avg (19983 groups)
 
 . 
 . di _n "===== Done ====="
