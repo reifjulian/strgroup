@@ -28,7 +28,7 @@ plugin call strgroup var1 var2 xcost
 typedef unsigned char lev_byte;
 
 // Methods
-ST_unsigned _levEditDistance(ST_unsigned len1, const lev_byte *string1, ST_unsigned len2, const lev_byte *string2,ST_int xcost);
+ST_unsigned _levEditDistance(ST_unsigned len1, const lev_byte *string1, ST_unsigned len2, const lev_byte *string2, ST_int xcost, ST_unsigned *row_buffer, ST_unsigned max_dist);
 ST_int _getStataRow(ST_int row);
 
 
@@ -81,7 +81,10 @@ STDLL stata_call(ST_int argc, char *argv[] )
 	///
 	// Usage 1
 	///
-	if(argc==3) return( _levEditDistance(strlen(argv[0]), argv[0], strlen(argv[1]), argv[1], atoi(argv[2])) );
+	if(argc==3) {
+		ST_unsigned row_buffer[2050];  // Max string length in Stata is 2045
+		return( _levEditDistance(strlen(argv[0]), argv[0], strlen(argv[1]), argv[1], atoi(argv[2]), row_buffer, (ST_unsigned)(-1)) );
+	}
 
 	/////
 	// Usage 2
@@ -89,6 +92,7 @@ STDLL stata_call(ST_int argc, char *argv[] )
 	if(argc==1)
 	{
 		xcost = atoi(argv[0]);
+		ST_unsigned row_buffer[2050];  // Pre-allocated buffer for Levenshtein calculation
 
 		// Loop over rows and calculate edit distance for each pair of strings
 		for(stata_row = SF_in1(); stata_row <= SF_in2(); stata_row++)
@@ -98,7 +102,7 @@ STDLL stata_call(ST_int argc, char *argv[] )
 
 				if(rc = SF_sdata(1,stata_row,str)) return(rc);
 				if(rc = SF_sdata(2,stata_row,str2)) return(rc);
-				if(rc = SF_vstore(3,stata_row, (double) _levEditDistance(strlen(str),str,strlen(str2),str2,xcost)  )) return(rc) ;
+				if(rc = SF_vstore(3,stata_row, (double) _levEditDistance(strlen(str),str,strlen(str2),str2,xcost,row_buffer,(ST_unsigned)(-1))  )) return(rc) ;
 			}
 		}
 		return(0);
@@ -118,10 +122,13 @@ STDLL stata_call(ST_int argc, char *argv[] )
 	/*
 	The string_data array holds all the strings that are being compared.
 	The matches array is an NxN matrix of all the matches between those strings (1 signifies a match, 0 a non-match),
-	where N is equal to the number of records. Its value is used to allocate memory to these arrays.
+	where N is equal to the number of records. Using unsigned char and contiguous memory for better cache performance.
 	*/
 	char **string_data = (char**)malloc(num_records*sizeof(char*));
-	ST_int **matches = (ST_int**)malloc(num_records*sizeof(ST_int*));
+	ST_int *string_lengths = (ST_int*)malloc(num_records*sizeof(ST_int));  // Pre-computed string lengths
+	ST_int *stata_rows = (ST_int*)malloc(num_records*sizeof(ST_int));  // Pre-computed Stata row mapping
+	unsigned char *matches = (unsigned char*)malloc((size_t)num_records*num_records*sizeof(unsigned char));  // Contiguous NxN matrix
+	ST_unsigned *lev_row_buffer = (ST_unsigned*)malloc(2050*sizeof(ST_unsigned));  // Pre-allocated buffer for Levenshtein
 
 	// Read the string data and store it in our array. Account for possible specified "in" and "if"
 	mat_row = 0;
@@ -132,7 +139,10 @@ STDLL stata_call(ST_int argc, char *argv[] )
 			if(rc = SF_sdata(1,stata_row,str)) return(rc);
 
 			// Add +1 for the null terminating character. Note: max string size is 244 in Stata
-			string_data[mat_row] = (char*)malloc((strlen(str)+1)*sizeof(char));
+			ST_int slen = strlen(str);
+			string_data[mat_row] = (char*)malloc((slen+1)*sizeof(char));
+			string_lengths[mat_row] = slen;  // Store pre-computed length
+			stata_rows[mat_row] = stata_row;  // Store Stata row mapping
 
 			strcpy(string_data[mat_row],str);
 			mat_row++;
@@ -148,16 +158,14 @@ STDLL stata_call(ST_int argc, char *argv[] )
 	*/
 	for(mat_row = 0; mat_row < num_records; mat_row++)
 	{
+		matches[mat_row * num_records + mat_row] = 1; // Strings obviously match with themselves. Get 1's down the diagonal.
 
-		matches[mat_row] = (ST_int*)malloc(num_records*sizeof(ST_int)); // Allocate memory for one row of matches
-		matches[mat_row][mat_row] = 1; // Strings obviously match with themselves. Get 1's down the diagonal.
-
-		len1 = strlen(string_data[mat_row]);
+		len1 = string_lengths[mat_row];  // Use pre-computed length
 
 		// (2,1) is the same as (1,2), so we only need to calculate one-half of the matrix.
 		for(mat_col = mat_row+1; mat_col < num_records; mat_col++)
 		{
-			len2 = strlen(string_data[mat_col]);
+			len2 = string_lengths[mat_col];  // Use pre-computed length
 
 			// Get max and min
 			min_length = len1 <= len2 ? len1 : len2;
@@ -180,12 +188,14 @@ STDLL stata_call(ST_int argc, char *argv[] )
 
 			// Skip pairs that cannot mathematically match
 			if ( (max_length-min_length)/norm_factor > threshold ) {
-				matches[mat_row][mat_col] = 0;
+				matches[mat_row * num_records + mat_col] = 0;
 				continue;
 			}
 
 			// Determine matches based on the indexed Levenshtein distance and the threshold
-			matches[mat_row][mat_col] = ( _levEditDistance(len1,string_data[mat_row],len2,string_data[mat_col],xcost) / norm_factor <= threshold);
+			// Calculate max allowed distance for early termination
+			ST_unsigned max_dist = (ST_unsigned)(threshold * norm_factor);
+			matches[mat_row * num_records + mat_col] = ( _levEditDistance(len1,string_data[mat_row],len2,string_data[mat_col],xcost,lev_row_buffer,max_dist) / norm_factor <= threshold);
 		}
 	}
 
@@ -194,7 +204,7 @@ STDLL stata_call(ST_int argc, char *argv[] )
 	{
 		for(mat_col = 0; mat_col < mat_row; mat_col++)
 		{
-			matches[mat_row][mat_col] = matches[mat_col][mat_row];
+			matches[mat_row * num_records + mat_col] = matches[mat_col * num_records + mat_row];
 		}
 	}
 
@@ -223,23 +233,23 @@ STDLL stata_call(ST_int argc, char *argv[] )
 				if(mat_row==mat_col) continue; // Don't compare the string to itself
 
 				// If one of column's matches matches another record...
-				if(matches[mat_row][mat_col] == 1)
+				if(matches[mat_row * num_records + mat_col] == 1)
 				{
 					// Loop over that record's matches...
 					for(k = 0; k < num_records; k++)
 					{
 						// If that record has a match...
-						if(matches[k][mat_row]==1)
+						if(matches[k * num_records + mat_row]==1)
 						{
 							// That isn't already matched in record j...
-							if(matches[k][mat_col] != 1)
+							if(matches[k * num_records + mat_col] != 1)
 							{
 								// Add it to j's matches and set the do/while loop to be rerun
-								matches[k][mat_col] = 1;
+								matches[k * num_records + mat_col] = 1;
 								restart = 1;
 							}
 							// Remove this match, since it now is already in string j's group
-							matches[k][mat_row] = 0;
+							matches[k * num_records + mat_row] = 0;
 						}
 					}
 				}
@@ -259,7 +269,7 @@ STDLL stata_call(ST_int argc, char *argv[] )
 		group_num_increased = 0;
 		for(mat_row = mat_col; mat_row < num_records; mat_row++)
 		{
-			if(matches[mat_row][mat_col] == 1)
+			if(matches[mat_row * num_records + mat_col] == 1)
 			{
 				if(group_num_increased==0)
 				{
@@ -268,7 +278,7 @@ STDLL stata_call(ST_int argc, char *argv[] )
 				}
 
 				// Store the group number in the Stata dataset. Variable 2 is our group variable
-				if(rc = SF_vstore(2, _getStataRow(mat_row), (ST_double) group)) return(rc);
+				if(rc = SF_vstore(2, stata_rows[mat_row], (ST_double) group)) return(rc);
 			}
 		}
 	}
@@ -277,10 +287,12 @@ STDLL stata_call(ST_int argc, char *argv[] )
 	for(k = 0; k < num_records; k++)
 	{
 		free(string_data[k]);
-		free(matches[k]);
 	}
 	free(string_data);
+	free(string_lengths);
+	free(stata_rows);
 	free(matches);
+	free(lev_row_buffer);
 	return(0);
 }
 
@@ -336,7 +348,7 @@ By default, PHP gives each operation (replace, insert, and delete) equal weight.
 */
 ST_unsigned _levEditDistance(ST_unsigned len1, const lev_byte *string1,
                   ST_unsigned len2, const lev_byte *string2,
-                 ST_int xcost)
+                 ST_int xcost, ST_unsigned *row_buffer, ST_unsigned max_dist)
 {
   ST_unsigned i;
   ST_unsigned *row;  /* we only need to keep one row of costs */
@@ -384,9 +396,7 @@ ST_unsigned _levEditDistance(ST_unsigned len1, const lev_byte *string1,
   half = len1 >> 1;
 
   /* initalize first row */
-  row = (ST_unsigned*)malloc(len2*sizeof(ST_unsigned));
-  if (!row)
-    return (ST_unsigned)(-1);
+  row = row_buffer;
   end = row + len2 - 1;
   for (i = 0; i < len2 - (xcost ? 0 : half); i++)
     row[i] = i;
@@ -401,6 +411,7 @@ ST_unsigned _levEditDistance(ST_unsigned len1, const lev_byte *string1,
       const lev_byte *char2p = string2;
       ST_unsigned D = i;
       ST_unsigned x = i;
+      ST_unsigned row_min = (ST_unsigned)(-1);  // Track minimum value in this row
       while (p <= end) {
         if (char1 == *(char2p++))
           x = --D;
@@ -411,7 +422,11 @@ ST_unsigned _levEditDistance(ST_unsigned len1, const lev_byte *string1,
         if (x > D)
           x = D;
         *(p++) = x;
+        if (x < row_min) row_min = x;  // Update minimum
       }
+      // Early termination: if minimum in this row exceeds max_dist, no point continuing
+      if (max_dist != (ST_unsigned)(-1) && row_min > max_dist)
+        return row_min;
     }
   }
   else {
@@ -425,6 +440,7 @@ ST_unsigned _levEditDistance(ST_unsigned len1, const lev_byte *string1,
       const lev_byte char1 = string1[i - 1];
       const lev_byte *char2p;
       ST_unsigned D, x;
+      ST_unsigned row_min = (ST_unsigned)(-1);  // Track minimum value in this row
       /* skip the upper triangle */
       if (i >= len1 - half) {
         ST_unsigned offset = i - (len1 - half);
@@ -439,6 +455,7 @@ ST_unsigned _levEditDistance(ST_unsigned len1, const lev_byte *string1,
         if (x > c3)
           x = c3;
         *(p++) = x;
+        if (x < row_min) row_min = x;
       }
       else {
         p = row + 1;
@@ -459,6 +476,7 @@ ST_unsigned _levEditDistance(ST_unsigned len1, const lev_byte *string1,
         if (x > D)
           x = D;
         *(p++) = x;
+        if (x < row_min) row_min = x;
       }
       /* lower triangle sentinel */
       if (i <= half) {
@@ -467,11 +485,14 @@ ST_unsigned _levEditDistance(ST_unsigned len1, const lev_byte *string1,
         if (x > c3)
           x = c3;
         *p = x;
+        if (x < row_min) row_min = x;
       }
+      // Early termination: if minimum in this row exceeds max_dist, no point continuing
+      if (max_dist != (ST_unsigned)(-1) && row_min > max_dist)
+        return row_min;
     }
   }
 
   i = *end;
-  free(row);
   return i;
 }
