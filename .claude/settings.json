@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(*)",
+      "Edit(*)",
+      "Write(*)",
+      "Bash(powershell.exe*StataMP-64*)",
+      "Bash(gcc *)",
+      "Bash(x86_64-w64-mingw32-gcc *)",
+      "Bash(clang *)",
+      "Bash(lipo *)",
+      "Bash(make*)",
+      "Bash(dir *)",
+      "Bash(\"C:\\\\cygwin64\\\\bin\\\\bash.exe\" *)",
+      "Bash(cp *)",
+      "Bash(powershell.exe*setup-x86_64.exe*)"
+    ]
+  }
+}
