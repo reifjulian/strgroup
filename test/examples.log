@@ -41,7 +41,7 @@ Running C:\Users\jreif\ado\personal\profile.do ...
 
 -> which strgroup, usesysdir
 ../src\strgroup.ado
-*! strgroup 1.0.4 17dec2021 by Julian Reif
+*! strgroup 1.0.5 25jan2026 by Julian Reif
 
 . set more off
 
@@ -71,7 +71,7 @@ Running C:\Users\jreif\ado\personal\profile.do ...
 (1 real change made)
 
 . save "`t'"
-file C:\Users\jreif\AppData\Local\Temp\ST_6be8_000001.tmp saved as .dta
+file C:\Users\jreif\AppData\Local\Temp\ST_705c_000001.tmp saved as .dta
     format
 
 . sysuse auto, clear

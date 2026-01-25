@@ -13,7 +13,7 @@ which strgroup
 local iters = 3
 
 * Test sizes - smaller for quick checks, larger for scaling analysis
-local sizes 10000 15000 20000
+local sizes 10000 20000 30000
 
 * Thresholds to test
 local thresholds 0.3

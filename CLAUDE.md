@@ -13,7 +13,7 @@ Two-layer design:
 1. **Stata ADO layer** (`src/strgroup.ado`, `src/levenshtein.ado`) — user-facing commands that handle syntax parsing, input validation, platform detection, and plugin loading.
 2. **C plugin layer** (`src/c/strgroup.c`) — high-performance core implementing the Levenshtein distance algorithm and transitive-closure grouping. Entry point is `stata_call()` with three modes: calculate single distance, compute pairwise distance vectors, and group strings by threshold.
 
-The C plugin uses dynamic programming with prefix/suffix stripping optimization. Grouping works by computing all pairwise normalized distances, building an NxN match matrix, applying transitive closure, then assigning group IDs to connected components.
+The C plugin uses dynamic programming with prefix/suffix stripping optimization. Grouping uses Union-Find for O(N) memory and efficient connected component detection (replacing the previous O(N²) match matrix approach).
 
 Platform-specific compiled plugins are stored in `src/` (windows32, windows64, unix, macosx). The ADO script detects the platform at runtime and loads the appropriate `.plugin` file.
 
@@ -92,11 +92,24 @@ Expected outputs for regression comparison are in `test/compare/` (`.dta` files)
 
 - String comparisons are byte-based (multi-byte Unicode characters are counted per-byte)
 - Maximum string length: 2045 characters (Stata limit)
-- O(N²) memory for match matrices; warns when N > 10,000 (overridable with `force` option)
+- O(N) memory usage via Union-Find; warns when N > 10,000 (overridable with `force` option)
 - The `first` option partitions strings by initial character to reduce comparisons
 - Normalization modes: `shorter` (default), `longer`, or `none`
 - Case-sensitive matching; missing strings are never matched
 - The `by:` prefix is supported for group-level processing
+
+## Optimizations (v1.0.5+)
+
+The `optimization` branch includes performance improvements yielding ~4.5x speedup:
+
+1. **Eliminate malloc/free in Levenshtein** - Pre-allocated buffer reused across all comparisons
+2. **Pre-compute string lengths** - Avoids redundant `strlen()` calls in inner loop
+3. **Pre-compute Stata row mapping** - O(1) lookup instead of O(N) scan per row
+4. **Early termination in Levenshtein** - Stop when minimum row value exceeds threshold
+5. **Union-Find for grouping** - Replaces O(N²) match matrix + O(N³) transitive closure with O(N) memory Union-Find structure
+6. **Sort-by-length optimization** - Enables early loop termination when length difference exceeds threshold
+
+All optimizations are pure C and cross-platform (Windows, macOS, Linux).
 
 ## Package Distribution
 
