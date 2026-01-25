@@ -65,8 +65,10 @@ end
 
 ***
 * Load the plugin (depends on user's platform)
+*   NB: mac os terminal returns "unix" so that needs to get handled
 ***
 local os = lower("`c(os)'")
+if strpos(c(machine_type),"Mac") local os = "macosx"
 local strgroup_plugin "strgroup.`os'"
 	
 if "`os'"=="windows" {
