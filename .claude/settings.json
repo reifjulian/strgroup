@@ -5,6 +5,7 @@
       "Edit(*)",
       "Write(*)",
       "Bash(powershell.exe*StataMP-64*)",
+      "Bash(/Applications/Stata/StataMP.app/Contents/MacOS/stata-mp *)",
       "Bash(gcc *)",
       "Bash(x86_64-w64-mingw32-gcc *)",
       "Bash(clang *)",
