@@ -11,9 +11,10 @@
       "Bash(lipo *)",
       "Bash(make*)",
       "Bash(dir *)",
-      "Bash(\"C:\\\\cygwin64\\\\bin\\\\bash.exe\" *)",
+      "Bash(*cygwin64*)",
       "Bash(cp *)",
-      "Bash(powershell.exe*setup-x86_64.exe*)"
+      "Bash(powershell.exe*setup-x86_64.exe*)",
+      "Bash(powershell.exe*Get-Content*)"
     ]
   }
 }
