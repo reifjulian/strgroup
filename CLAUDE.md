@@ -111,6 +111,16 @@ The `optimization` branch includes performance improvements yielding ~4.5x speed
 
 All optimizations are pure C and cross-platform (Windows, macOS, Linux).
 
+### Benchmark Results
+
+Timing comparison (threshold=0.3, random strings 5-15 chars):
+
+| N | v1.0.4 `first=no` | v1.0.5 `first=no` | Speedup | v1.0.4 `first=yes` | v1.0.5 `first=yes` | Speedup |
+|-------|-------------------|-------------------|---------|--------------------|--------------------|---------|
+| 10000 | 4.09s | 0.96s | 4.3x | 0.54s | 0.08s | 6.8x |
+| 20000 | 16.51s | 3.72s | 4.4x | 2.07s | 0.23s | 9.0x |
+| 30000 | 37.86s | 8.41s | 4.5x | 4.64s | 0.44s | 10.5x |
+
 ## Package Distribution
 
 - `stata.toc` and `strgroup.pkg` define the Stata package manifest for `net install`
