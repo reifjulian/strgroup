@@ -1,8 +1,15 @@
 /*
-Group strings together according to how "similar they are.
+Group strings together according to how "similar" they are.
 Written by Julian Reif, 2007.05.02
 Updated 2010.05.13
 Updated 2010.07.28 - allocate memory equal exactly to size of string to decrease mem requirements.
+Updated 2026.01.25 (v1.0.5) - Performance optimizations (~4.5x speedup, up to 10x with `first` option):
+  1. Eliminate malloc/free in Levenshtein - pre-allocated buffer reused across all comparisons
+  2. Pre-compute string lengths - avoids redundant strlen() calls in inner loop
+  3. Pre-compute Stata row mapping - O(1) lookup instead of O(N) scan per row
+  4. Early termination in Levenshtein - stop when minimum row value exceeds threshold
+  5. Union-Find for grouping - replaces O(N²) match matrix with O(N) memory structure
+  6. Sort-by-length optimization - enables early loop termination when length difference exceeds threshold
 */
 
 /*
