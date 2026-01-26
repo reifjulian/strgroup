@@ -1,13 +1,13 @@
 # STRGROUP: match strings based on their Levenshtein edit distance
 
-- Current version: `1.0.4 17dec2021`
+- Current version: `1.0.5 25jan2026`
 - Jump to: [`overview`](#overview) [`installation`](#installation) [`compiling`](#compiling) [`update history`](#update-history) [`author`](#author)
 
 -----------
 
 ## Overview: 
 
-`strgroup` is a [Stata](http://www.stata.com) command that performs a fuzzy string match using the following algorithm:
+`strgroup` is a [Stata](https://www.stata.com) command that performs a fuzzy string match using the following algorithm:
 
 1. Calculate the Levenshtein edit distance between all pairwise combinations of strings.
 
@@ -37,7 +37,7 @@ Type `which strgroup` at the Stata prompt to determine which version you have in
 net install strgroup, from("https://raw.githubusercontent.com/reifjulian/strgroup/master") replace
 ```
 
-To install the version that was uploaded to SSC, copy and paste the following line of code:
+To install the version that was uploaded to SSC (may be older than the GitHub version), copy and paste the following line of code:
 ```stata
 ssc install strgroup, replace
 ```
@@ -47,20 +47,19 @@ After installing, type `help strgroup` to learn the syntax.
 `strgroup` is implemented as a [C plugin](https://www.stata.com/plugins/) in order to minimize memory requirements and to maximize speed.  Plugins are specific to the hardware architecture and software framework of your computer. Define a platform by two characteristics: machine type and operating system.  Stata stores these characteristics in `c(machine_type)` and `c(os)`, respectively. `strgroup` supports the following platforms at this time:
 
 | Machine type    | Operating system           |
-| :------------- |:-------------| 
+| :------------- |:-------------|
 | PC      | Windows |
-| PC (64-bit x86-64)      | Windows      | 
-| PC (64-bit x86-64)      | Unix      | 
-| Macintosh      | MacOSX      | 
-| Macintosh (Intel 64-bit)       | MacOSX      | 
+| PC (64-bit x86-64)      | Windows      |
+| PC (64-bit x86-64)      | Unix      |
+| Macintosh (Apple Silicon/Intel)      | MacOSX      | 
 
-`strgroup` might work with some other platforms (e.g., 32-bit unix), but this has not been tested.
+A 32-bit Windows plugin is included but has not been tested. Other platforms (e.g., 32-bit Unix) are not supported.
 
 ## Compiling:
 
 The C source code for `strgroup` is available in `/src/c`. It must be compiled separately for different machine types.
 
-PC Windows 32-bit (Cygwin):
+PC Windows 32-bit (legacy, requires older Cygwin with `-mno-cygwin` support):
 ```
 gcc -shared -mno-cygwin stplugin.c strgroup.c -O3 -funroll-loops -o strgroup.windows32.plugin
 ```
@@ -75,26 +74,18 @@ Unix 64-bit:
 gcc -shared -fPIC -DSYSTEM=OPUNIX stplugin.c strgroup.c -O3 -funroll-loops -o "strgroup.unix.plugin"
 ```
 
-Mac OS X (Intel and ARM):
+macOS (Apple Silicon and Intel):
 ```
 clang -bundle -o strgroup.macosx.x86_64 stplugin.c strgroup.c -DSYSTEM=APPLEMAC -target x86_64-apple-macos10.11
 clang -bundle -o strgroup.macosx.arm64 stplugin.c strgroup.c -DSYSTEM=APPLEMAC -target arm64-apple-macos11
 lipo -create -output strgroup.macosx.plugin strgroup.macosx.x86_64 strgroup.macosx.arm64
 ```
 
-Additional information that may be helpful:
-
-http://stackoverflow.com/questions/873812/how-to-compile-existing-posix-code-for-64-bit-windows
-
-InspectExe allows you to to figure out if a compiled file is a 32-bit or 64-bit DLL: install InspectExe, right-click, properties->InspectExe
-
-http://www.silurian.com/win32/inspect.htm
-
-64-bit Cygwin should be able to compile to either 32-bit or 64-bit Windows. There are issues with longs, but `strgroup` doesn't use them
-
-http://cygwin.com/cygwin-ug-net/programming.html
-
 ## Update History:
+* **January 25, 2026**
+  - Optimized plugin speed
+  - Fixed bug where strgroup loaded wrong plugin in macOS terminal mode
+
 * **August 9, 2022**
   - Added support for ARM-based macs
   
@@ -108,6 +99,6 @@ http://cygwin.com/cygwin-ug-net/programming.html
 
 ## Author:
 
-[Julian Reif](http://www.julianreif.com)
+[Julian Reif](https://www.julianreif.com)
 <br>University of Illinois
 <br>jreif@illinois.edu
