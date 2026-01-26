@@ -1,4 +1,5 @@
-*! levenshtein 1.0.2 28feb2020 by Julian Reif
+*! levenshtein 1.0.3 25jan2026 by Julian Reif
+* 1.0.3: Optimized plugin speed. Fixed bug where strgroup loaded wrong plugin in macos terminal mode.
 * 1.0.2: Plugin platform type now determined in the code
 * 1.0.1: Added ability to retrieve edit distances for two string vectors
 

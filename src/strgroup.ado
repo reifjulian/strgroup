@@ -1,5 +1,5 @@
 *! strgroup 1.0.5 25jan2026 by Julian Reif
-* 1.0.5: Optimized plugin speed
+* 1.0.5: Optimized plugin speed. Fixed bug where strgroup loaded wrong plugin in macos terminal mode.
 * 1.0.4: Edited warning message in case of duplicates
 * 1.0.3: Plugin platform type now determined in the code
 * 1.0.2: Added byable option
