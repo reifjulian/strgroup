@@ -18,7 +18,7 @@ help {hi:levenshtein}
 
 {title:Description}
 
-{p 4 4 2}{cmd:levenshtein} calculate the Levenshtein edit distance(s) between two strings or two
+{p 4 4 2}{cmd:levenshtein} calculates the Levenshtein edit distance(s) between two strings or two
 vectors of strings. The Levenshtein edit distance is defined as the minimum number of insertions,
 deletions, or substitutions necessary to change one string into the other. For example, the
 Levenshtein edit distance between "mitten" and "fitting" is 3, since the following three edits 
@@ -58,7 +58,7 @@ For example, the edit distance between the Unicode characters '$' and '£' is 2,
 {p 4 4 2}
 To avoid this issue, use Stata's string functions to convert multi-byte characters to single-byte characters:
 
-{col 8}{cmd:. {stata levenshtein "$" "`=ustrto("£","latin1",1)'"}
+{col 8}{cmd:. {stata levenshtein "$" "`=ustrto("£","latin1",1)'"}}
 
 
 {title:Notes}
@@ -73,8 +73,7 @@ Stata stores these characteristics in {cmd:c(machine_type)} and {cmd:c(os)}, res
 {col 10}PC{col 40} Windows
 {col 10}PC (64-bit x86-64){col 40} Windows
 {col 10}PC (64-bit x86-64){col 40} Unix
-{col 10}Macintosh{col 40} MacOSX
-{col 10}Macintosh (Intel 64-bit){col 40} MacOSX
+{col 10}Macintosh (Apple Silicon/Intel){col 40} MacOSX
 
 
 {title:Saved results}
@@ -85,7 +84,7 @@ Stata stores these characteristics in {cmd:c(machine_type)} and {cmd:c(os)}, res
 {title:Acknowledgements}
 
 {p 4 4 2} The algorithm used to calculate the Levenshtein edit distance is based on a Python extension written by David Necas (Yeti).
-His code is publicly available at {browse "http://code.google.com/p/pylevenshtein/source/browse/trunk/Levenshtein.c":http://code.google.com/p/pylevenshtein/source/browse/trunk/Levenshtein.c}.
+His code is publicly available at {browse "https://github.com/rapidfuzz/python-Levenshtein":https://github.com/rapidfuzz/python-Levenshtein}.
 
 {p 4 4 2}Thanks to James Beard for helpful suggestions and feedback.
 
