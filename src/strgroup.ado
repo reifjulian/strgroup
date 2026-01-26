@@ -21,6 +21,11 @@ program strgroup, byable(recall, noheader)
 	
 	if _byindex()==1 confirm new var `generate'
 	confirm string var `varlist'
+	cap confirm strL var `varlist'
+	if !_rc {
+		di as error "strL variables are not supported. Convert to regular string first."
+		exit 198
+	}
 	
 	* Check normalization input
 	local normalize `"`=lower("`normalize'")'"'

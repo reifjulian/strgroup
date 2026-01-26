@@ -18,6 +18,13 @@ program define levenshtein, rclass
 		* Error check the inputs
 		local string_vars `varlist'
 		confirm string var `string_vars'
+		foreach v of local string_vars {
+			cap confirm strL var `v'
+			if !_rc {
+				di as error "strL variables are not supported. Convert to regular string first."
+				exit 198
+			}
+		}
 		marksample touse, strok novarlist
 		local 0 "`generate'"
         cap syntax newvarlist 

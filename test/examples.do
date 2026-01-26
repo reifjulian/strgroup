@@ -74,4 +74,14 @@ strgroup make, gen(group1) threshold(.75)
 sort foreign
 by foreign: strgroup make, gen(group2) threshold(.75)
 
+* Test that strL variables are rejected
+clear
+set obs 5
+gen strL mystrL = "test string " + string(_n)
+cap strgroup mystrL, gen(group) threshold(.5)
+assert _rc==198
+
+cap levenshtein mystrL mystrL, gen(dist)
+assert _rc==198
+
 ** EOF
