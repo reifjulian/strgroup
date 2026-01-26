@@ -1,4 +1,5 @@
-*! strgroup 1.0.4 17dec2021 by Julian Reif
+*! strgroup 1.0.5 25jan2026 by Julian Reif
+* 1.0.5: Optimized plugin speed. Fixed bug where strgroup loaded wrong plugin in macos terminal mode.
 * 1.0.4: Edited warning message in case of duplicates
 * 1.0.3: Plugin platform type now determined in the code
 * 1.0.2: Added byable option
@@ -20,6 +21,11 @@ program strgroup, byable(recall, noheader)
 	
 	if _byindex()==1 confirm new var `generate'
 	confirm string var `varlist'
+	cap confirm strL var `varlist'
+	if !_rc {
+		di as error "strL variables are not supported. Convert to regular string first."
+		exit 198
+	}
 	
 	* Check normalization input
 	local normalize `"`=lower("`normalize'")'"'
@@ -139,8 +145,10 @@ end
 
 ***
 * Load the plugin (depends on user's platform)
+*   NB: mac os terminal returns "unix" so that needs to get handled
 ***
 local os = lower("`c(os)'")
+if strpos(c(machine_type),"Mac") local os = "macosx"
 local strgroup_plugin "strgroup.`os'"
 	
 if "`os'"=="windows" {

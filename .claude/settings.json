@@ -2,19 +2,37 @@
   "permissions": {
     "allow": [
       "Read(*)",
-      "Edit(*)",
-      "Write(*)",
+      "Edit(**)",
+      "Write(**)",
+
+      "Bash(dir *)",
+      "Bash(wc *)",
+      "Bash(ls *)",
+      "Bash(pwd)",
+      "Bash(which *)",
+      "Bash(where *)",
+      "Bash(tree *)",
+      "Bash(powershell.exe*Get-ChildItem*)",
+      "Bash(powershell.exe*Get-Content*)",
+      "Bash(powershell.exe*Get-Item*)",
+      "Bash(powershell.exe*Test-Path*)",
+      "Bash(powershell.exe*Select-String*)",
+
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git show*)",
+      "Bash(git blame*)",
+
       "Bash(powershell.exe*StataMP-64*)",
+      "Bash(/Applications/Stata/StataMP.app/Contents/MacOS/stata-mp *)",
+
       "Bash(gcc *)",
       "Bash(x86_64-w64-mingw32-gcc *)",
       "Bash(clang *)",
       "Bash(lipo *)",
-      "Bash(make*)",
-      "Bash(dir *)",
       "Bash(*cygwin64*)",
-      "Bash(cp *)",
-      "Bash(powershell.exe*setup-x86_64.exe*)",
-      "Bash(powershell.exe*Get-Content*)"
+      "Bash(powershell.exe*setup-x86_64.exe*)"
     ]
   }
 }

@@ -2,3 +2,4 @@
 
 .claude/*
 !.claude/settings.json
+test/examples.log

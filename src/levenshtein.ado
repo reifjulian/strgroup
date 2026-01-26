@@ -1,4 +1,5 @@
-*! levenshtein 1.0.2 28feb2020 by Julian Reif
+*! levenshtein 1.0.3 25jan2026 by Julian Reif
+* 1.0.3: Optimized plugin speed. Fixed bug where strgroup loaded wrong plugin in macos terminal mode.
 * 1.0.2: Plugin platform type now determined in the code
 * 1.0.1: Added ability to retrieve edit distances for two string vectors
 
@@ -17,6 +18,13 @@ program define levenshtein, rclass
 		* Error check the inputs
 		local string_vars `varlist'
 		confirm string var `string_vars'
+		foreach v of local string_vars {
+			cap confirm strL var `v'
+			if !_rc {
+				di as error "strL variables are not supported. Convert to regular string first."
+				exit 198
+			}
+		}
 		marksample touse, strok novarlist
 		local 0 "`generate'"
         cap syntax newvarlist 
@@ -65,8 +73,10 @@ end
 
 ***
 * Load the plugin (depends on user's platform)
+*   NB: mac os terminal returns "unix" so that needs to get handled
 ***
 local os = lower("`c(os)'")
+if strpos(c(machine_type),"Mac") local os = "macosx"
 local strgroup_plugin "strgroup.`os'"
 	
 if "`os'"=="windows" {
