@@ -84,7 +84,7 @@ lipo -create -output strgroup.macosx.plugin strgroup.macosx.x86_64 strgroup.maco
 ## Update History:
 * **January 25, 2026**
   - Optimized plugin speed
-  - Fixed bug where strgroup loaded wrong plugin in macOS terminal mode
+  - Fixed bug where `strgroup` loaded wrong plugin in macOS terminal mode
 
 * **August 9, 2022**
   - Added support for ARM-based macs
@@ -93,9 +93,7 @@ lipo -create -output strgroup.macosx.plugin strgroup.macosx.x86_64 strgroup.maco
   - Edited text of warning message in case of duplicate observations
 
 * **February 28, 2020**
-  - Package installation now downloads plugins for all platforms
-  - **strgroup.ado** then autodetects which plugin to use based on user's platform
-  - Thus, user is no longer required to do multiple installs when using a shared library with multiple platforms
+  - Package installation now downloads plugins for all platforms, so user is no longer required to do multiple installs when using a shared library with multiple platforms
 
 ## Author:
 
