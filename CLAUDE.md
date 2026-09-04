@@ -125,3 +125,9 @@ Timing comparison (threshold=0.3, random strings 5-15 chars):
 
 - `stata.toc` and `strgroup.pkg` define the Stata package manifest for `net install`
 - Installation: `net install strgroup, from("https://raw.githubusercontent.com/reifjulian/strgroup/master") replace`
+
+## Git commits
+
+Never create a git commit without explicit user permission — even in auto mode. Always wait for the user to ask before committing.
+
+Do not add `Co-authored-by` trailers or sign yourself as a coauthor in commit messages.
